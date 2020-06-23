@@ -12,7 +12,8 @@ module.exports = {
     ? 'cheap-module-eval-source-map'
     : 'source-map',
   resolve: {
-    extensions: ['.mjs', '.json', '.ts'],
+    modules: ['src', 'node_modules'],
+    extensions: ['.mjs', '.json', '.js', '.jsx', '.ts', '.tsx'],
     symlinks: false,
     cacheWithContext: false,
   },

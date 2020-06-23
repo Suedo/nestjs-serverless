@@ -16,33 +16,27 @@ const mapper = new DataMapper({
 export class BlogRepository {
   async getBlog(dto: GetBlogDto): Promise<BlogModel> {
     const { id } = dto;
-    let op = {} as BlogModel;
 
     const condition = Object.assign(new BlogModel(), {
       id,
     });
 
-    mapper.get(condition).then(fetchedObject => {
-      op = fetchedObject;
-      console.log('fetched object:', fetchedObject);
-    });
+    const op = mapper.get(condition);
+    console.log('saved object:', JSON.stringify(op, null, 2));
 
     return op;
   }
 
   async createBlog(dto: CreateBlogDto): Promise<BlogModel> {
     const { title, post } = dto;
-    let op = {} as BlogModel;
 
     const newPost = Object.assign(new BlogModel(), {
       title,
       post,
     });
 
-    mapper.put(newPost).then(objectSaved => {
-      op = objectSaved;
-      console.log('saved object:', objectSaved);
-    });
+    const op = mapper.put(newPost);
+    console.log('saved object:', JSON.stringify(op, null, 2));
 
     return op;
   }

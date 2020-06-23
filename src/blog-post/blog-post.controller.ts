@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  UsePipes,
-  ValidationPipe,
-  Body,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { BlogPostService } from './blog-post.service';
 import { CreateBlogDto } from './dto/CreateBlog';
 import { BlogModel } from './model/BlogModel';
@@ -16,16 +9,19 @@ export class BlogPostController {
   constructor(private blogService: BlogPostService) {}
 
   @Get()
-  @UsePipes(ValidationPipe)
+  // @UsePipes(ValidationPipe)
   public async getBlogs(@Body() dto: GetBlogDto): Promise<BlogModel> {
     const op = await this.blogService.getBlog(dto);
     return op;
   }
 
   @Post()
-  @UsePipes(ValidationPipe)
+  // @UsePipes(ValidationPipe)
   public async createBlogPost(@Body() dto: CreateBlogDto): Promise<BlogModel> {
     const op = await this.blogService.createBlog(dto);
     return op;
   }
 }
+
+// reason why webpack build doesnt work
+// https://github.com/nestjs/nest/issues/1386
