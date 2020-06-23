@@ -1,0 +1,70 @@
+service:
+  name: nest-sls-express-demo
+# app and org for use with dashboard.serverless.com
+#app: your-app-name
+#org: your-org-name
+
+# Add the serverless-webpack plugin
+plugins:
+  - serverless-webpack
+  # - serverless-pseudo-parameters
+  # - serverless-dotenv-plugin
+provider:
+  name: aws
+  runtime: nodejs12.x
+  profile: slsuser
+  region: ap-south-1
+  stage: ${opt:stage, 'dev'}
+  apiGateway:
+    minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
+  # environment:
+  #   AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+  #   AUCTIONS_TABLE_NAME: ${self:custom.AuctionsTable.name}
+  #   MAIL_QUEUE_URL: ${self:custom.MailQueue.url}
+  #   SOURCE_EMAIL: ${env:SOURCE_EMAIL}
+  #   AUCTIONS_BUCKET_NAME: ${self:custom.AuctionsBucket.name}
+  # iamRoleStatements:
+  #   - ${file(iam/AuctionsTableIAM.yml):AuctionsTableIAM}
+  #   - ${file(iam/MailQueueIAM.yml):MailQueueIAM}
+  #   - ${file(iam/AuctionsBucketIAM.yml):AuctionsBucketIAM}
+
+# package:
+#   individually: true
+#   include:
+#     - dist/photo/photo.entity.js
+
+functions:
+  main: # The name of the lambda function
+    handler: src/lambda.handler
+    events:
+      - http:
+          method: any
+          path: /{proxy+} # any+ ?
+
+# resources:
+#   Resources:
+#     AuctionsTable: ${file(resources/AuctionsTable.yml):AuctionsTable}
+#     AuctionsBucket: ${file(resources/AuctionsBucket.yml):AuctionsBucket}
+#     AuctionsBucketPolicy: ${file(resources/AuctionsBucket.yml):AuctionsBucketPolicy}
+
+custom:
+  # authorizer: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:auth-service-${self:provider.stage}-auth
+  # AuctionsTable:
+  #   name: !Ref AuctionsTable
+  #   arn: !GetAtt AuctionsTable.Arn
+  # # These will be used in IAM files
+  # MailQueue:
+  #   # Notification service exposes these as OUTPUTS
+  #   # serverless variables help import them. cf is for cloudformation
+  #   arn: ${cf:notification-service-ts-${self:provider.stage}.MailQueueArn}
+  #   url: ${cf:notification-service-ts-${self:provider.stage}.MailQueueUrl}
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+  dotenv:
+    logging: false
+  # AuctionsBucket:
+  #   name: auctions-bucket-slsuser-${self:provider.stage}
+#
+# ${self:provider.stage} : stage is a serverless property, so doesnt need #{}
+# #{AWS::Region} : Region is an AWS/Cloudformation property, so needs #{}
