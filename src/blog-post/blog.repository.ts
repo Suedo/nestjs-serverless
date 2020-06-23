@@ -4,6 +4,8 @@ import { CreateBlogDto } from './dto/CreateBlog';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { DynamoDB } from 'aws-sdk';
 import { BlogModel } from './model/BlogModel';
+import { GetBlogDto } from './dto/GetBlogDto';
+import { uuid } from 'uuidv4';
 
 const mapper = new DataMapper({
   client: new DynamoDB({ region: 'ap-south-1' }), // the SDK client used to execute operations
@@ -12,6 +14,22 @@ const mapper = new DataMapper({
 
 @Injectable()
 export class BlogRepository {
+  async getBlog(dto: GetBlogDto): Promise<BlogModel> {
+    const { id } = dto;
+    let op = {} as BlogModel;
+
+    const condition = Object.assign(new BlogModel(), {
+      id,
+    });
+
+    mapper.get(condition).then(fetchedObject => {
+      op = fetchedObject;
+      console.log('fetched object:', fetchedObject);
+    });
+
+    return op;
+  }
+
   async createBlog(dto: CreateBlogDto): Promise<BlogModel> {
     const { title, post } = dto;
     let op = {} as BlogModel;

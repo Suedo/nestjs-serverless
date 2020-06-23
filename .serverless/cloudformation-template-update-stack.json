@@ -118,6 +118,24 @@
                       "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/nest-sls-express-demo-dev*:*:*"
                     }
                   ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:PutItem",
+                    "dynamodb:Scan",
+                    "dynamodb:GetItem",
+                    "dynamodb:UpdateItem",
+                    "dynamodb:Query"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::GetAtt": [
+                        "BlogTable",
+                        "Arn"
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -146,7 +164,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/nest-sls-express-demo/dev/1592887835915-2020-06-23T04:50:35.915Z/nest-sls-express-demo.zip"
+          "S3Key": "serverless/nest-sls-express-demo/dev/1592922917838-2020-06-23T14:35:17.838Z/nest-sls-express-demo.zip"
         },
         "FunctionName": "nest-sls-express-demo-dev-main",
         "Handler": "src/lambda.handler",
@@ -158,20 +176,27 @@
           ]
         },
         "Runtime": "nodejs12.x",
-        "Timeout": 6
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "BLOG_TABLE_NAME": {
+              "Ref": "BlogTable"
+            }
+          }
+        }
       },
       "DependsOn": [
         "MainLogGroup"
       ]
     },
-    "MainLambdaVersion4kB8vERq7cs3hYlYPKQIFsJkC5DOYjbecGwhhqodXs": {
+    "MainLambdaVersionDZJs54cdBfcDth5tW6cDjNhvanbap7SYjxhsDBRjY": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "MainLambdaFunction"
         },
-        "CodeSha256": "N/E/dC33qMw1VDFm4wuVoe7AyxtduZb3i/gkGZ1eKKI="
+        "CodeSha256": "PKGqhxfA2Kfsgk1cQGEtMR1I4/SMRRpHkOb0qNeZAxk="
       }
     },
     "ApiGatewayRestApi": {
@@ -245,7 +270,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1592887812126": {
+    "ApiGatewayDeployment1592922891444": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -293,6 +318,33 @@
           ]
         }
       }
+    },
+    "BlogTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "BlogTable",
+        "BillingMode": "PAY_PER_REQUEST",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "createdAt",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "createdAt",
+            "KeyType": "RANGE"
+          }
+        ]
+      }
     }
   },
   "Outputs": {
@@ -304,7 +356,7 @@
     "MainLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "MainLambdaVersion4kB8vERq7cs3hYlYPKQIFsJkC5DOYjbecGwhhqodXs"
+        "Ref": "MainLambdaVersionDZJs54cdBfcDth5tW6cDjNhvanbap7SYjxhsDBRjY"
       }
     },
     "ServiceEndpoint": {

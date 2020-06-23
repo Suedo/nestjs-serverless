@@ -6,12 +6,12 @@ import {
 } from '@aws/dynamodb-data-mapper-annotations';
 import { uuid } from 'uuidv4';
 
-@table('BlogTable')
+@table(process.env.BLOG_TABLE_NAME)
 export class BlogModel {
   @hashKey({ defaultProvider: () => uuid() })
   id: string;
 
-  @rangeKey({ defaultProvider: () => new Date() })
+  @rangeKey({ defaultProvider: () => new Date().toISOString() })
   createdAt: Date;
 
   @attribute()

@@ -17,19 +17,20 @@ provider:
   stage: ${opt:stage, 'dev'}
   apiGateway:
     minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
-  # environment:
-  #   AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
-  #   AUCTIONS_TABLE_NAME: ${self:custom.AuctionsTable.name}
+  environment:
+    #   AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    BLOG_TABLE_NAME: ${self:custom.BlogTable.name}
   #   MAIL_QUEUE_URL: ${self:custom.MailQueue.url}
   #   SOURCE_EMAIL: ${env:SOURCE_EMAIL}
   #   AUCTIONS_BUCKET_NAME: ${self:custom.AuctionsBucket.name}
-  # iamRoleStatements:
-  #   - ${file(iam/AuctionsTableIAM.yml):AuctionsTableIAM}
+  iamRoleStatements:
+    - ${file(iam/BlogTableIAM.yml):BlogTableIAM}
   #   - ${file(iam/MailQueueIAM.yml):MailQueueIAM}
   #   - ${file(iam/AuctionsBucketIAM.yml):AuctionsBucketIAM}
 
-# package:
-#   individually: true
+package:
+  # individually: true
+  excludeDevDependencies: false
 #   include:
 #     - dist/photo/photo.entity.js
 
@@ -41,17 +42,17 @@ functions:
           method: any
           path: /{proxy+} # any+ ?
 
-# resources:
-#   Resources:
-#     AuctionsTable: ${file(resources/AuctionsTable.yml):AuctionsTable}
+resources:
+  Resources:
+    BlogTable: ${file(resources/BlogTable.yml):BlogTable}
 #     AuctionsBucket: ${file(resources/AuctionsBucket.yml):AuctionsBucket}
 #     AuctionsBucketPolicy: ${file(resources/AuctionsBucket.yml):AuctionsBucketPolicy}
 
 custom:
   # authorizer: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:auth-service-${self:provider.stage}-auth
-  # AuctionsTable:
-  #   name: !Ref AuctionsTable
-  #   arn: !GetAtt AuctionsTable.Arn
+  BlogTable:
+    name: !Ref BlogTable
+    arn: !GetAtt BlogTable.Arn
   # # These will be used in IAM files
   # MailQueue:
   #   # Notification service exposes these as OUTPUTS
