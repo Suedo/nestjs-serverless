@@ -1,14 +1,9 @@
 service:
   name: nest-sls-express-demo
-# app and org for use with dashboard.serverless.com
-#app: your-app-name
-#org: your-org-name
 
-# Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
-  # - serverless-pseudo-parameters
-  # - serverless-dotenv-plugin
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -18,15 +13,9 @@ provider:
   apiGateway:
     minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
   environment:
-    #   AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
     BLOG_TABLE_NAME: ${self:custom.BlogTable.name}
-  #   MAIL_QUEUE_URL: ${self:custom.MailQueue.url}
-  #   SOURCE_EMAIL: ${env:SOURCE_EMAIL}
-  #   AUCTIONS_BUCKET_NAME: ${self:custom.AuctionsBucket.name}
   iamRoleStatements:
     - ${file(iam/BlogTableIAM.yml):BlogTableIAM}
-  #   - ${file(iam/MailQueueIAM.yml):MailQueueIAM}
-  #   - ${file(iam/AuctionsBucketIAM.yml):AuctionsBucketIAM}
 
 functions:
   main: # The name of the lambda function
@@ -39,27 +28,13 @@ functions:
 resources:
   Resources:
     BlogTable: ${file(resources/BlogTable.yml):BlogTable}
-#     AuctionsBucket: ${file(resources/AuctionsBucket.yml):AuctionsBucket}
-#     AuctionsBucketPolicy: ${file(resources/AuctionsBucket.yml):AuctionsBucketPolicy}
 
 custom:
-  # authorizer: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:auth-service-${self:provider.stage}-auth
   BlogTable:
     name: !Ref BlogTable
     arn: !GetAtt BlogTable.Arn
-  # # These will be used in IAM files
-  # MailQueue:
-  #   # Notification service exposes these as OUTPUTS
-  #   # serverless variables help import them. cf is for cloudformation
-  #   arn: ${cf:notification-service-ts-${self:provider.stage}.MailQueueArn}
-  #   url: ${cf:notification-service-ts-${self:provider.stage}.MailQueueUrl}
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
   dotenv:
     logging: false
-  # AuctionsBucket:
-  #   name: auctions-bucket-slsuser-${self:provider.stage}
-#
-# ${self:provider.stage} : stage is a serverless property, so doesnt need #{}
-# #{AWS::Region} : Region is an AWS/Cloudformation property, so needs #{}
