@@ -1,0 +1,40 @@
+Usage: nest generate|g [options] <schematic> [name] [path]
+
+Generate a Nest element.
+  Available schematics:
+    ┌───────────────┬─────────────┐
+    │ name          │ alias       │
+    │ application   │ application │
+    │ class         │ cl          │
+    │ configuration │ config      │
+    │ controller    │ co          │
+    │ decorator     │ d           │
+    │ filter        │ f           │
+    │ gateway       │ ga          │
+    │ guard         │ gu          │
+    │ interceptor   │ in          │
+    │ interface     │ interface   │
+    │ middleware    │ mi          │
+    │ module        │ mo          │
+    │ pipe          │ pi          │
+    │ provider      │ pr          │
+    │ resolver      │ r           │
+    │ service       │ s           │
+    │ library       │ lib         │
+    │ sub-app       │ app         │
+    └───────────────┴─────────────┘
+
+----------------------------------------------------------------
+Nest works, finally.
+----------------------------------------------------------------
+1. Removed webpack for bundling
+2. added the index handler from `dist` folder
+
+`dist` folder is compiled by nest itself, and all works nicely.
+
+
+----------------------------------------------------------------
+DynamoDB mapper
+----------------------------------------------------------------
+For simple cases, it seemed very helpful, but for complex scenarios, it adds more
+obtuse syntax and boilerplate. Will be switching to normal DynamoDB queries.
