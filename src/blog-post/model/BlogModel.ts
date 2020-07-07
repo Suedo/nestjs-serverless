@@ -1,4 +1,9 @@
-import { attribute, hashKey, rangeKey, table } from '@aws/dynamodb-data-mapper-annotations';
+import {
+  attribute,
+  hashKey,
+  rangeKey,
+  table,
+} from '@aws/dynamodb-data-mapper-annotations';
 import { uuid } from 'uuidv4';
 
 @table(process.env.BLOG_TABLE_NAME)

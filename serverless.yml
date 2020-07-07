@@ -35,6 +35,8 @@ custom:
     arn: !GetAtt BlogTable.Arn
   webpack:
     webpackConfig: ./webpack.config.js
+    packager: 'yarn' # Defaults to npm
+    packagerOptions: {} # Optional, depending on the selected packager
     includeModules: true
   dotenv:
     logging: false
