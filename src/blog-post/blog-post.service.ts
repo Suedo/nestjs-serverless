@@ -8,9 +8,13 @@ import { GetBlogDto } from './dto/GetBlogDto';
 export class BlogPostService {
   constructor(private db: BlogRepository) {}
 
-  public async getBlog(dto: GetBlogDto): Promise<BlogModel> {
-    const blog = await this.db.getBlog(dto);
+  public async getBlogById(id: string): Promise<BlogModel> {
+    const blog = await this.db.getBlogById(id);
     return blog;
+  }
+
+  public async getAllBlogs() {
+    return this.db.getAllBlogs();
   }
 
   public async createBlog(dto: CreateBlogDto): Promise<BlogModel> {

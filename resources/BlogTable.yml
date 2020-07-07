@@ -6,8 +6,8 @@ BlogTable: # logical id of resource
     AttributeDefinitions:
       - AttributeName: id
         AttributeType: S
-      - AttributeName: createdAt
-        AttributeType: S
+      # - AttributeName: createdAt
+      #   AttributeType: S
       # - AttributeName: title
       #   AttributeType: S
       # - AttributeName: post
@@ -15,5 +15,5 @@ BlogTable: # logical id of resource
     KeySchema:
       - AttributeName: id
         KeyType: HASH
-      - AttributeName: createdAt
-        KeyType: RANGE
+      # - AttributeName: createdAt
+      #   KeyType: RANGE

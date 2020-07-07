@@ -1,9 +1,6 @@
 service:
   name: nest-sls-express-demo
 
-plugins:
-  - serverless-webpack
-
 provider:
   name: aws
   runtime: nodejs12.x
@@ -19,7 +16,7 @@ provider:
 
 functions:
   main: # The name of the lambda function
-    handler: src/lambda.handler
+    handler: dist/index.handler
     events:
       - http:
           method: any
@@ -33,10 +30,17 @@ custom:
   BlogTable:
     name: !Ref BlogTable
     arn: !GetAtt BlogTable.Arn
-  webpack:
-    webpackConfig: ./webpack.config.js
-    packager: 'yarn' # Defaults to npm
-    packagerOptions: {} # Optional, depending on the selected packager
-    includeModules: true
   dotenv:
     logging: false
+
+package:
+  # individually: true
+  exclude:
+    - .git/**
+    - src/**
+    - test/**
+    - e2e/**
+    - nodemon.json
+    - README.md
+  include:
+    - .env

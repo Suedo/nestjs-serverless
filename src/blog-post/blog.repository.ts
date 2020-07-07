@@ -4,8 +4,6 @@ import { CreateBlogDto } from './dto/CreateBlog';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { DynamoDB } from 'aws-sdk';
 import { BlogModel } from './model/BlogModel';
-import { GetBlogDto } from './dto/GetBlogDto';
-import { uuid } from 'uuidv4';
 
 const mapper = new DataMapper({
   client: new DynamoDB({ region: 'ap-south-1' }), // the SDK client used to execute operations
@@ -14,9 +12,7 @@ const mapper = new DataMapper({
 
 @Injectable()
 export class BlogRepository {
-  async getBlog(dto: GetBlogDto): Promise<BlogModel> {
-    const { id } = dto;
-
+  async getBlogById(id: string): Promise<BlogModel> {
     const condition = Object.assign(new BlogModel(), {
       id,
     });
@@ -25,6 +21,15 @@ export class BlogRepository {
     console.log('saved object:', JSON.stringify(op, null, 2));
 
     return op;
+  }
+
+  async getAllBlogs(): Promise<BlogModel[]> {
+    const blogs = [];
+    // Error: No item with the key {"id":{"S":"all"}} found in the BlogTable table
+    for await (const blog of mapper.scan(BlogModel)) {
+      blogs.push(blog);
+    }
+    return blogs;
   }
 
   async createBlog(dto: CreateBlogDto): Promise<BlogModel> {

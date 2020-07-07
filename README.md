@@ -1,7 +1,6 @@
-This project tries to use NestJS with Serverless Framework. Bundled through webpack. Faces bundling issue as mentioned [here](https://github.com/nestjs/nest/issues/1386).
+This project uses NestJS with Serverless Framework.
 
-This problem is not faced in local deployments, but ONLY when deployed to lambda.
+Key points:
 
-In Lambda even, It works and gives proper response json when **not** using validation classes and pipes.
-
-I made this project as a POC, trying to implement configuration features from various other Nest+Serverles projects in Github. Untill the build issue gets an elegant fix, will skip Nest + Serverless.
+1.  **NOT** using webpack for bundling. Earlier used it, and had a lot of friction with Nest bundling. More info [here](https://github.com/nestjs/nest/issues/1386).
+2.  Will be switching to regular DynamoDB queries from current [dynamodb-data-mapper-js](https://github.com/awslabs/dynamodb-data-mapper-js), as it tends to be (imo) more obtuse and boilerplate-ish as queries grow more complex, needing various [addons](dynamodb-data-mapper-js) like annotations, expressions etc to work.

@@ -24,3 +24,17 @@ Generate a Nest element.
     │ sub-app       │ app         │
     └───────────────┴─────────────┘
 
+----------------------------------------------------------------
+Nest works, finally.
+----------------------------------------------------------------
+1. Removed webpack for bundling
+2. added the index handler from `dist` folder
+
+`dist` folder is compiled by nest itself, and all works nicely.
+
+
+----------------------------------------------------------------
+DynamoDB mapper
+----------------------------------------------------------------
+For simple cases, it seemed very helpful, but for complex scenarios, it adds more
+obtuse syntax and boilerplate. Will be switching to normal DynamoDB queries.

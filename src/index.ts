@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 // lambda.ts
-import { Handler, Context } from 'aws-lambda';
+import { APIGatewayProxyHandler } from 'aws-lambda';
 import { Server } from 'http';
 // @ts-ignore
 import { createServer, proxy } from 'aws-serverless-express';
@@ -22,18 +22,21 @@ const binaryMimeTypes: string[] = [];
 
 let cachedServer: Server;
 
-async function bootstrapServer(): Promise<Server> {
-  if (!cachedServer) {
-    const expressApp = express();
-    const nestApp = await NestFactory.create(AppModule, new ExpressAdapter(expressApp));
-    nestApp.use(eventContext());
-    await nestApp.init();
-    cachedServer = createServer(expressApp, undefined, binaryMimeTypes);
-  }
-  return cachedServer;
-}
+const bootstrapServer = async (): Promise<Server> => {
+  const expressApp = express();
+  const adapter = new ExpressAdapter(expressApp);
+  const app = await NestFactory.create(AppModule, adapter);
+  app.enableCors();
+  await app.init();
+  return createServer(expressApp);
+};
 
-export const handler: Handler = async (event: any, context: Context) => {
-  cachedServer = await bootstrapServer();
-  return proxy(cachedServer, event, context, 'PROMISE').promise;
+export const handler: APIGatewayProxyHandler = async (event, context) => {
+  if (!cachedServer) {
+    const server = await bootstrapServer();
+    cachedServer = server;
+    return proxy(server, event, context, 'PROMISE').promise;
+  } else {
+    return proxy(cachedServer, event, context, 'PROMISE').promise;
+  }
 };
